@@ -106,10 +106,9 @@ async def directory_fuzz(website):
     try:
         async with aiofiles.open(wordlist, "r") as file:
             async with httpx.AsyncClient(timeout=3.0) as client:
-                
-                # --- BASELINE CHECK FOR SOFT 404s ---
-                print("[*] Checking server behavior for soft 404s...")
-                fake_path = f"{website.rstrip('/')}/laceratesandboxfake123456"
+    
+                print("checking server behavior for soft 404s")
+                fake_path = f"{website.rstrip('/')}/laceratesandboxfake123456likenothingisgoingtobenamedthisformanyreasons"
                 try:
                     baseline_res = await client.get(fake_path, follow_redirects=False)
                     baseline_length = len(baseline_res.text) if baseline_res.is_success else -1
@@ -239,18 +238,23 @@ while True:
             asyncio.run(directory_fuzz(website))
         elif command in ['help', '?']:
             print('''Commands
-            request      -> send a request and get the response (interactive)
-            dns-fuzz     -> fuzz random domains automatically
-            clear        -> clear screen
-            help/?       -> this
-            exit/quit    -> exit''')
+            request        -> send a request and get the response (interactive)
+            dns-fuzz       -> fuzz random domains automatically
+            directory-fuzz -> directory fuzzer with soft-404 finder
+            clear          -> clear screen
+            help/?         -> this
+            exit/quit      -> exit''')
         elif command in ['exit', 'quit']:
             sys.exit(0)
         else:
             print('''Invalid
-            request    -> send a request and get the response (interactive)
-            dns-fuzz   -> fuzz random domains automatically
-            clear      -> clear screen ''')
+            request        -> send a request and get the response (interactive)
+            dns-fuzz       -> fuzz random domains automatically
+            directory-fuzz -> directory fuzzer with soft-404 finder
+            help/?         -> show this
+            clear          -> clear screen 
+            exit/quit      -> exit
+            ''')
     except (KeyboardInterrupt, EOFError):
         print("\nExiting...")
         break
